@@ -11,6 +11,7 @@ type Matrix struct {
 
 	Transpose     func()
 	Flatten       func() *Vector
+	Equal         func(*Matrix) bool
 	DotProduct    func(*Matrix) *Matrix
 	Multiply      func(*Matrix) *Matrix
 	Add           func(*Matrix) *Matrix
@@ -23,6 +24,10 @@ type Matrix struct {
 type MatrixOption func(*Matrix)
 
 func (m *Matrix) Init() {
+	m.Shape = func() string {
+		return fmt.Sprintf("(%d,%d)", m.Rows, m.Columns)
+	}
+
 	m.String = func() string {
 		outputString := "\n"
 		for i, element := range m.Elements {
@@ -54,8 +59,19 @@ func (m *Matrix) Init() {
 		return NewVector(Elements(flattened))
 	}
 
-	m.Shape = func() string {
-		return fmt.Sprintf("(%d,%d)", m.Rows, m.Columns)
+	m.Equal = func(m2 *Matrix) bool {
+		if m.Rows != m2.Rows || m.Columns != m2.Columns {
+			return false
+		}
+		equal := true
+		for i := 0; i < len(m.Elements); i++ {
+			for j := 0; j < len(m.Elements[0].Elements); j++ {
+				if m.Elements[i].Elements[j] != m2.Elements[i].Elements[j] {
+					equal = false
+				}
+			}
+		}
+		return equal
 	}
 }
 
