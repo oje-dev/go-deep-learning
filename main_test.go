@@ -6,7 +6,24 @@ import (
 )
 
 func TestTranspose(t *testing.T) {
+	m := NewMatrix(Rows(2), Columns(3))
+	m.Elements[0].Elements[0] = 1.2
+	m.Elements[1].Elements[0] = 2.3
+	m.Elements[0].Elements[1] = 4.3
+	m.Elements[1].Elements[1] = 1.2
+	m.Elements[0].Elements[2] = 3.5
+	m.Elements[1].Elements[2] = 9.2
+	mT := NewMatrix(Rows(3), Columns(2))
+	mT.Elements[0].Elements[0] = 1.2
+	mT.Elements[0].Elements[1] = 2.3
+	mT.Elements[1].Elements[0] = 4.3
+	mT.Elements[1].Elements[1] = 1.2
+	mT.Elements[2].Elements[0] = 3.5
+	mT.Elements[2].Elements[1] = 9.2
 
+	if !m.Transpose().Equal(mT) {
+		t.Errorf("Transpose incorrect\ngot: %s\nwant: %s", m.Transpose().String(), mT.String())
+	}
 }
 
 func TestFlatten(t *testing.T) {

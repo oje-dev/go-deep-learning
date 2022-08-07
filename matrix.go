@@ -9,7 +9,7 @@ type Matrix struct {
 	Shape    func() string
 	String   func() string
 
-	Transpose     func()
+	Transpose     func() *Matrix
 	Flatten       func() *Vector
 	Equal         func(*Matrix) bool
 	DotProduct    func(*Matrix) *Matrix
@@ -18,7 +18,7 @@ type Matrix struct {
 	Subtract      func(*Matrix) *Matrix
 	ApplyFunction func(func(float64) float64) *Matrix
 	Scale         func(float64) *Matrix
-	AddScalar     func(*Vector)
+	AddScalar     func(*Vector) *Matrix
 }
 
 type MatrixOption func(*Matrix)
@@ -41,12 +41,14 @@ func (m *Matrix) Init() {
 		return outputString
 	}
 
-	m.Transpose = func() {
-		var temp int
-		temp = m.Rows
-		m.Rows = m.Columns
-		m.Columns = temp
-
+	m.Transpose = func() *Matrix {
+		matrix := NewMatrix(Rows(m.Columns), Columns(m.Rows))
+		for i := 0; i < m.Rows; i++ {
+			for j := 0; j < m.Columns; j++ {
+				matrix.Elements[j].Elements[i] = m.Elements[i].Elements[j]
+			}
+		}
+		return matrix
 	}
 
 	m.Flatten = func() *Vector {
@@ -64,8 +66,8 @@ func (m *Matrix) Init() {
 			return false
 		}
 		equal := true
-		for i := 0; i < len(m.Elements); i++ {
-			for j := 0; j < len(m.Elements[0].Elements); j++ {
+		for i := 0; i < m.Rows; i++ {
+			for j := 0; j < m.Columns; j++ {
 				if m.Elements[i].Elements[j] != m2.Elements[i].Elements[j] {
 					equal = false
 				}
@@ -73,6 +75,36 @@ func (m *Matrix) Init() {
 		}
 		return equal
 	}
+
+	m.DotProduct = func(m2 *Matrix) *Matrix {
+
+		return m
+	}
+
+	m.Multiply = func(m2 *Matrix) *Matrix {
+		return m
+	}
+
+	m.Add = func(m2 *Matrix) *Matrix {
+		return m
+	}
+
+	m.Subtract = func(m2 *Matrix) *Matrix {
+		return m
+	}
+
+	m.ApplyFunction = func(func(n float64) float64) *Matrix {
+		return m
+	}
+
+	m.Scale = func(n float64) *Matrix {
+		return m
+	}
+
+	m.AddScalar = func(v *Vector) *Matrix {
+		return m
+	}
+
 }
 
 func Rows(rows int) MatrixOption {

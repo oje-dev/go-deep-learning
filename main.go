@@ -12,9 +12,6 @@ func main() {
 	matrix.Elements[1].Elements[2] = 9.2
 
 	fmt.Println(matrix.String())
-	fmt.Println(matrix.Shape())
-	matrix.Transpose()
-	fmt.Println(matrix.Shape())
-	vector := matrix.Flatten()
-	fmt.Println(vector.String())
+	matrixTranspose := matrix.Transpose()
+	fmt.Println(matrixTranspose.String())
 }
